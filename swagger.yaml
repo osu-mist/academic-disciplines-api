@@ -22,12 +22,32 @@ paths:
       operationId: getDisciplines
       description: "Get a list of majors, minors, and concentrations. Filter by query parameters."
       parameters:
-        - name: type
+        - name: major
           in: query
-          description: "Filter by discipline type. Valid types are major, minor, or concentration."
+          description: >
+            If true, disciplines that can be majors will be included.
+            If false, disciplines that can be majors will be excluded.
+          type: boolean
+          required: false
+        - name: minor
+          in: query
+          description: >
+            If true, disciplines that can be minors will be included.
+            If false, disciplines that can be minors will be excluded.
+          type: boolean
+          required: false
+        - name: concentration
+          in: query
+          description: >
+            If true, disciplines that can be concentrations will be included.
+            If false, disciplines that can be concentrations will be excluded.
+          type: boolean
+          required: false
+        - name: department
+          in: query
+          description: Filter by department code.
           type: string
           required: false
-          collectionFormat: multi
         - $ref: '#/parameters/pretty'
       responses:
         "200":
@@ -43,11 +63,11 @@ paths:
       tags:
       - disciplines
       operationId: getDisciplineByID
-      description: "Get a list of majors, minors, and concentrations. Filter by query parameters."
+      description: "Get a concentration by code/ID"
       parameters:
         - name: id
           in: path
-          description: "ID of discipline to retrieve."
+          description: "ID/code of discipline to retrieve."
           type: string
           required: true
         - $ref: '#/parameters/pretty'
@@ -80,6 +100,7 @@ definitions:
     properties:
       id:
         type: string
+        description: Discipline code
       type:
         type: string
       attributes:
@@ -88,13 +109,22 @@ definitions:
         $ref: "#/definitions/ResourceLinks"
   DisciplineAttributes:
     properties:
-      title:
+      description:
         type: string
-        format: Title of discipline.
-      type:
+        description: Description of discipline.
+      descriptionLong:
         type: string
-        format: "major, minor, or concentration"
-      abbreviation:
+        description: Long description of discipline.
+      validMajor:
+        type: boolean
+      validMinor:
+        type: boolean
+      validConcentration:
+        type: boolean
+      department:
+        type: string
+        description: Department code
+      cipcCode:
         type: string
   ResourceLinks:
     properties:
