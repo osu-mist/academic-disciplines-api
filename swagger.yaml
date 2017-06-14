@@ -25,22 +25,19 @@ paths:
         - name: major
           in: query
           description: >
-            If true, disciplines that can be majors will be included.
-            If false, disciplines that can be majors will be excluded.
+            If true, disciplines that are not valid majors will be excluded.
           type: boolean
           required: false
         - name: minor
           in: query
           description: >
-            If true, disciplines that can be minors will be included.
-            If false, disciplines that can be minors will be excluded.
+            If true, disciplines that are not valid minors will be excluded.
           type: boolean
           required: false
         - name: concentration
           in: query
           description: >
-            If true, disciplines that can be concentrations will be included.
-            If false, disciplines that can be concentrations will be excluded.
+            If true, disciplines that are not valid concentrations will be excluded.
           type: boolean
           required: false
         - name: department
@@ -90,8 +87,6 @@ parameters:
 definitions:
   DisciplineResultObject:
     properties:
-      links:
-        $ref: "#/definitions/ResourceLinks"
       data:
         type: array
         items:
@@ -105,8 +100,6 @@ definitions:
         type: string
       attributes:
         $ref: "#/definitions/DisciplineAttributes"
-      links:
-        $ref: "#/definitions/ResourceLinks"
   DisciplineAttributes:
     properties:
       description:
@@ -125,10 +118,6 @@ definitions:
         type: string
         description: Department code
       cipcCode:
-        type: string
-  ResourceLinks:
-    properties:
-      self:
         type: string
   Error:
     type: object
