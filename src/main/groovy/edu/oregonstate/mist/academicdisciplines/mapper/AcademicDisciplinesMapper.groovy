@@ -21,8 +21,7 @@ public class AcademicDisciplinesMapper  implements ResultSetMapper<ResourceObjec
                         validConcentration: getValidDiscipline(rs.getString("VALID_CONCENTRATION")),
                         department: rs.getString("DEPARTMENT"),
                         cipcCode: rs.getString("CIPC_CODE")
-                ),
-                links: ["self": rs.getString("ID")]
+                )
         )
     }
 
