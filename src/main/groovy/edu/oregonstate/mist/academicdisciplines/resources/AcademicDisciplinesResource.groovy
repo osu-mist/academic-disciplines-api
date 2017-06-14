@@ -3,6 +3,7 @@ package edu.oregonstate.mist.academicdisciplines.resources
 import com.codahale.metrics.annotation.Timed
 import edu.oregonstate.mist.academicdisciplines.db.AcademicDisciplinesDAO
 import edu.oregonstate.mist.api.Resource
+import edu.oregonstate.mist.api.jsonapi.ResourceObject
 import edu.oregonstate.mist.api.jsonapi.ResultObject
 import groovy.transform.TypeChecked
 import org.slf4j.Logger
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory
 import javax.annotation.security.PermitAll
 import javax.ws.rs.GET
 import javax.ws.rs.Path
+import javax.ws.rs.PathParam
 import javax.ws.rs.Produces
 import javax.ws.rs.QueryParam
 import javax.ws.rs.core.MediaType
@@ -42,6 +44,21 @@ class AcademicDisciplinesResource extends Resource {
                         getDBBooleanFlag(concentration),
                         department
                 )
+        )).build()
+    }
+
+    @Timed
+    @Path('{id: [0-9a-zA-Z-]+}')
+    @GET
+    Response getDisciplineById(@PathParam('id') String id) {
+        ResourceObject discipline = academicDisciplinesDAO.getDisciplineById(id)
+
+        if (!discipline) {
+            return notFound().build()
+        }
+
+        ok(new ResultObject(
+                data: discipline
         )).build()
     }
 

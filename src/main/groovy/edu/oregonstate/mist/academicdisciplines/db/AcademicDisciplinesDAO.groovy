@@ -19,6 +19,9 @@ public interface AcademicDisciplinesDAO extends Closeable {
                                   @Bind("concentration") String concentration,
                                   @Bind("department") String department)
 
+    @SqlQuery(AbstractAcademicDisciplinesDAO.getDisciplineById)
+    ResourceObject getDisciplineById(@Bind("id") String id)
+
     @Override
     void close()
 }
