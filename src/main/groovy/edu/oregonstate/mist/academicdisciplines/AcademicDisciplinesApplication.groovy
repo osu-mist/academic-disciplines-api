@@ -1,13 +1,17 @@
 package edu.oregonstate.mist.academicdisciplines
 
+import edu.oregonstate.mist.academicdisciplines.db.AcademicDisciplinesDAO
+import edu.oregonstate.mist.academicdisciplines.health.AcademicDisciplinesHealthCheck
+import edu.oregonstate.mist.academicdisciplines.resources.AcademicDisciplinesResource
 import edu.oregonstate.mist.api.Application
-import edu.oregonstate.mist.api.Configuration
+import io.dropwizard.jdbi.DBIFactory
 import io.dropwizard.setup.Environment
+import org.skife.jdbi.v2.DBI
 
 /**
  * Main application class.
  */
-class AcademicDisciplinesApplication extends Application<Configuration> {
+class AcademicDisciplinesApplication extends Application<AcademicDisciplinesConfiguration> {
     /**
      * Parses command-line arguments and runs the application.
      *
@@ -15,8 +19,17 @@ class AcademicDisciplinesApplication extends Application<Configuration> {
      * @param environment
      */
     @Override
-    public void run(Configuration configuration, Environment environment) {
+    public void run(AcademicDisciplinesConfiguration configuration, Environment environment) {
         this.setup(configuration, environment)
+
+        DBIFactory factory = new DBIFactory()
+        DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "jdbi")
+        AcademicDisciplinesDAO academicDisciplinesDAO = jdbi.onDemand(AcademicDisciplinesDAO.class)
+        environment.jersey().register(new AcademicDisciplinesResource(academicDisciplinesDAO))
+
+        AcademicDisciplinesHealthCheck healthCheck = new AcademicDisciplinesHealthCheck(
+                academicDisciplinesDAO)
+        environment.healthChecks().register("academicDisciplinesHealthCheck", healthCheck)
     }
 
     /**
