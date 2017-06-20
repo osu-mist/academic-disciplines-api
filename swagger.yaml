@@ -1,35 +1,82 @@
 swagger: '2.0'
 info:
-  title: Web API Skeleton
-  description: Skeleton for Dropwizard Web APIs
-  version: '0.0'
+  title: Academic Disciplines
+  description: Web API to get academic disciplines, including majors, minors, and concentrations.
+  version: "1"
   license:
     name: GNU Affero General Public License Version 3
     url: http://www.gnu.org/licenses/agpl-3.0.en.html
 externalDocs:
   description: GitHub Repository
-  url: https://github.com/osu-mist/web-api-skeleton
-host: localhost
+  url: https://github.com/osu-mist/academic-disciplines-api
 schemes:
-  - http
-basePath: /api/v0
-consumes:
-  - text/plain
+  - https
+basePath: /v1/catalog
 produces:
-  - text/plain
+  - application/json
 paths:
-  /:
+  /academic-disciplines:
     get:
-      summary: Get information
-      description: Build and runtime information about the application.
+      tags:
+      - disciplines
+      operationId: getDisciplines
+      description: "Get a list of majors, minors, and concentrations. Filter by query parameters."
       parameters:
+        - name: major
+          in: query
+          description: >
+            If true, disciplines that are not majors will be excluded.
+          type: boolean
+          required: false
+        - name: minor
+          in: query
+          description: >
+            If true, disciplines that are not minors will be excluded.
+          type: boolean
+          required: false
+        - name: concentration
+          in: query
+          description: >
+            If true, disciplines that are not concentrations will be excluded.
+          type: boolean
+          required: false
+        - name: department
+          in: query
+          description: Filter by department code.
+          type: string
+          required: false
         - $ref: '#/parameters/pretty'
       responses:
-        200:
-          description: Object containing information
+        "200":
+          description: Successful response
           schema:
-            $ref: '#/definitions/Info'
-
+            $ref: "#/definitions/DisciplineResultObject"
+        "400":
+          description: Bad request
+          schema:
+            $ref: "#/definitions/Error"
+  /academic-disciplines/{id}:
+    get:
+      tags:
+      - disciplines
+      operationId: getDisciplineByID
+      description: "Get a concentration by code/ID"
+      parameters:
+        - name: id
+          in: path
+          description: "ID/code of discipline to retrieve."
+          type: string
+          required: true
+        - $ref: '#/parameters/pretty'
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            $ref: "#/definitions/DisciplineResultObject"
+        "404":
+          description: Not found
+          schema:
+            $ref: "#/definitions/Error"
 parameters:
   pretty:
     name: pretty
@@ -37,34 +84,52 @@ parameters:
     type: boolean
     required: false
     description: If true, JSON response will be pretty-printed
-
 definitions:
-  Info:
+  DisciplineResultObject:
     properties:
-      name:
+      data:
+        type: array
+        items:
+          $ref: "#/definitions/Presentation"
+  Presentation:
+    properties:
+      id:
         type: string
-        description: Name of the API.
-      time:
+        description: Discipline code
+      type:
         type: string
-        description: Build time in ISO 8601 format.
-      unixTime:
-        type: integer
-        description: Build time as milliseconds since the unix epoch.
-      commit:
+      attributes:
+        $ref: "#/definitions/DisciplineAttributes"
+  DisciplineAttributes:
+    properties:
+      description:
         type: string
-        description: Git commit hash of the revision which was built.
-      documentation:
+        description: Description of discipline.
+      descriptionLong:
         type: string
-        description: Filename of the swagger specification for the API.
+        description: Long description of discipline.
+      major:
+        type: boolean
+      minor:
+        type: boolean
+      concentration:
+        type: boolean
+      department:
+        type: string
+        description: Department code
+      cipcCode:
+        type: string
   Error:
+    type: object
     properties:
       status:
         type: integer
+        format: int32
         description: HTTP status code.
       developerMessage:
         type: string
         description: An error string aimed at developers.
-      userMesage:
+      userMessage:
         type: string
         description: An error string aimed at end users.
       code:

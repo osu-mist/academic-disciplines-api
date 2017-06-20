@@ -1,6 +1,6 @@
-# Web API Skeleton
+# Academic Disciplines API
 
-Skeleton for Dropwizard Web APIs.
+Get majors, minors, and concentrations.
 
 ### Generate Keys
 
