@@ -16,9 +16,9 @@ public class AcademicDisciplinesMapper  implements ResultSetMapper<ResourceObjec
                 attributes: new Attributes(
                         description: rs.getString("DESCRIPTION"),
                         descriptionLong: rs.getString("DESCRIPTION_LONG"),
-                        validMajor: getValidDiscipline(rs.getString("VALID_MAJOR")),
-                        validMinor: getValidDiscipline(rs.getString("VALID_MINOR")),
-                        validConcentration: getValidDiscipline(rs.getString("VALID_CONCENTRATION")),
+                        major: getValidDiscipline(rs.getString("VALID_MAJOR")),
+                        minor: getValidDiscipline(rs.getString("VALID_MINOR")),
+                        concentration: getValidDiscipline(rs.getString("VALID_CONCENTRATION")),
                         department: rs.getString("DEPARTMENT"),
                         cipcCode: rs.getString("CIPC_CODE")
                 )
