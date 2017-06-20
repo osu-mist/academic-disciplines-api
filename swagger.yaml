@@ -25,19 +25,19 @@ paths:
         - name: major
           in: query
           description: >
-            If true, disciplines that are not valid majors will be excluded.
+            If true, disciplines that are not majors will be excluded.
           type: boolean
           required: false
         - name: minor
           in: query
           description: >
-            If true, disciplines that are not valid minors will be excluded.
+            If true, disciplines that are not minors will be excluded.
           type: boolean
           required: false
         - name: concentration
           in: query
           description: >
-            If true, disciplines that are not valid concentrations will be excluded.
+            If true, disciplines that are not concentrations will be excluded.
           type: boolean
           required: false
         - name: department
@@ -108,11 +108,11 @@ definitions:
       descriptionLong:
         type: string
         description: Long description of discipline.
-      validMajor:
+      major:
         type: boolean
-      validMinor:
+      minor:
         type: boolean
-      validConcentration:
+      concentration:
         type: boolean
       department:
         type: string
