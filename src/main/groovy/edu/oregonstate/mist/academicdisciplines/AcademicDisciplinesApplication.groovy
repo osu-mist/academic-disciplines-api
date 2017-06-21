@@ -25,7 +25,8 @@ class AcademicDisciplinesApplication extends Application<AcademicDisciplinesConf
         DBIFactory factory = new DBIFactory()
         DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "jdbi")
         AcademicDisciplinesDAO academicDisciplinesDAO = jdbi.onDemand(AcademicDisciplinesDAO.class)
-        environment.jersey().register(new AcademicDisciplinesResource(academicDisciplinesDAO))
+        environment.jersey().register(new AcademicDisciplinesResource(academicDisciplinesDAO,
+            configuration.api.endpointUri))
 
         AcademicDisciplinesHealthCheck healthCheck = new AcademicDisciplinesHealthCheck(
                 academicDisciplinesDAO)

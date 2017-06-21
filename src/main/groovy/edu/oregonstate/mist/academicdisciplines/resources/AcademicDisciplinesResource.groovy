@@ -6,9 +6,6 @@ import edu.oregonstate.mist.api.Resource
 import edu.oregonstate.mist.api.jsonapi.ResourceObject
 import edu.oregonstate.mist.api.jsonapi.ResultObject
 import groovy.transform.TypeChecked
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-
 import javax.annotation.security.PermitAll
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -17,18 +14,21 @@ import javax.ws.rs.Produces
 import javax.ws.rs.QueryParam
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
+import javax.ws.rs.core.UriBuilder
 
 @Path("academic-disciplines")
 @Produces(MediaType.APPLICATION_JSON)
 @PermitAll
 @TypeChecked
 class AcademicDisciplinesResource extends Resource {
-    Logger logger = LoggerFactory.getLogger(AcademicDisciplinesResource.class)
 
     private AcademicDisciplinesDAO academicDisciplinesDAO
+    private URI endpointUri
 
-    AcademicDisciplinesResource(AcademicDisciplinesDAO academicDisciplinesDAO) {
+    AcademicDisciplinesResource(AcademicDisciplinesDAO academicDisciplinesDAO,
+                                URI endpointUri) {
         this.academicDisciplinesDAO = academicDisciplinesDAO
+        this.endpointUri = endpointUri
     }
 
     @Timed
@@ -37,14 +37,19 @@ class AcademicDisciplinesResource extends Resource {
                             @QueryParam('minor') Boolean minor,
                             @QueryParam('concentration') Boolean concentration,
                             @QueryParam('department') String department) {
-        ok(new ResultObject(
+        ResultObject resultObject = new ResultObject(
                 data: academicDisciplinesDAO.getDisciplines(
                         getDBBooleanFlag(major),
                         getDBBooleanFlag(minor),
                         getDBBooleanFlag(concentration),
                         department
-                )
-        )).build()
+                ))
+
+        resultObject.data.each {
+            it['links'] = addSelfLink(it)
+        }
+
+        ok(resultObject).build()
     }
 
     @Timed
@@ -57,9 +62,18 @@ class AcademicDisciplinesResource extends Resource {
             return notFound().build()
         }
 
+        discipline['links'] = addSelfLink(discipline)
+
         ok(new ResultObject(
                 data: discipline
         )).build()
+    }
+
+    private def addSelfLink(def resultObject) {
+        UriBuilder builder = UriBuilder.fromUri(endpointUri).path(this.class).path("{id}")
+        [
+                'self': builder.build(resultObject['id'])
+        ]
     }
 
     private String getDBBooleanFlag(Boolean aBoolean) {
