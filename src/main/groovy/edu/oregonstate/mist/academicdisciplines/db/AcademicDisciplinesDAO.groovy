@@ -14,13 +14,13 @@ public interface AcademicDisciplinesDAO extends Closeable {
     Integer checkHealth()
 
     @SqlQuery(AbstractAcademicDisciplinesDAO.getDisciplines)
-    List<ResourceObject> getDisciplines(@Bind("major") String major,
-                                  @Bind("minor") String minor,
-                                  @Bind("concentration") String concentration,
+    List<ResourceObject> getDisciplines(@Bind("major_ind") String major,
+                                  @Bind("minor_ind") String minor,
+                                  @Bind("concentration_ind") String concentration,
                                   @Bind("department") String department)
 
-    @SqlQuery(AbstractAcademicDisciplinesDAO.getDisciplineById)
-    ResourceObject getDisciplineById(@Bind("id") String id)
+    @SqlQuery(AbstractAcademicDisciplinesDAO.getDisciplineByCode)
+    ResourceObject getDisciplineById(@Bind("code") String id)
 
     @Override
     void close()
