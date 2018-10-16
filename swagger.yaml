@@ -11,6 +11,7 @@ externalDocs:
   url: https://github.com/osu-mist/academic-disciplines-api
 schemes:
   - https
+host: api.oregonstate.edu
 basePath: /v1/catalog
 produces:
   - application/json
