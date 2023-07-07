@@ -12,7 +12,7 @@ externalDocs:
 schemes:
   - https
 host: api.oregonstate.edu
-basePath: /v1/catalog
+basePath: /v1
 produces:
   - application/json
 security:
